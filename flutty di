@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thank You Letter</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: "Cormorant Garamond", serif;
+        background: #f7f1f5;
+    }
+
+    /* Fade-in animation */
+    .fade-paragraph {
+        opacity: 0;
+        animation: fadeIn 1.5s ease forwards;
+    }
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Sparkle effect */
+    #letter-screen::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-image: radial-gradient(circle, rgba(255,255,255,0.7) 2px, transparent 2px);
+        background-size: 4px 4px;
+        animation: sparkle 4s linear infinite;
+        opacity: 0.4;
+        pointer-events: none;
+    }
+    @keyframes sparkle {
+        from { background-position: 0 0; }
+        to { background-position: 200px 200px; }
+    }
+
+    /* Floating hearts & flowers */
+    .float {
+        position: fixed;
+        bottom: -50px;
+        animation: floatUp 8s linear infinite;
+        opacity: 0.7;
+    }
+    @keyframes floatUp {
+        0% { transform: translateY(0) scale(0.8); }
+        100% { transform: translateY(-120vh) scale(1.2); }
+    }
+
+    /* Envelope Screen */
+    #envelope-screen {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        background: linear-gradient(#ffeef4, #f2e7ff);
+        position: absolute;
+        top: 0;
+        transition: opacity 1s ease;
+    }
+
+    .envelope {
+        width: 280px;
+        height: 200px;
+        background: #fbe9e9;
+        border: 3px solid #f3c4d3;
+        border-radius: 10px;
+        position: relative;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        transition: transform 0.6s ease;
+    }
+    .envelope:hover {
+        transform: scale(1.05);
+    }
+
+    .envelope-top {
+        width: 280px;
+        height: 140px;
+        background: #f7dce3;
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        border: 3px solid #f3c4d3;
+        border-bottom: none;
+        border-radius: 10px 10px 0 0;
+        transition: transform 1s ease;
+    }
+
+    .open-envelope-top {
+        transform: rotateX(180deg);
+        transform-origin: top;
+    }
+
+    .label-text {
+        margin-top: 250px;
+        font-size: 1.6rem;
+        font-family: "Dancing Script", cursive;
+        color: #c45f7f;
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Letter Screen */
+    #letter-screen {
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        padding: 40px;
+        background: #fff8fc;
+        text-align: center;
+        position: absolute;
+        top: 0;
+        overflow-y: auto;
+    }
+
+    #letter {
+        max-width: 650px;
+        margin: 0 auto;
+        padding: 30px;
+        background: #ffffffd0;
+        backdrop-filter: blur(3px);
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.9rem;
+        line-height: 2.6rem;
+        color: #b54c76;
+        white-space: pre-wrap;
+        opacity: 0;
+        animation: fadeIn 2s ease forwards;
+    }
+
+    /* Replay button */
+    #replay-btn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        border: none;
+        background: #f7cfe3;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+</style>
+</head>
+<body>
+
+<!-- Floating flowers & hearts -->
+<script>
+    const emojis = ["💗","💞","🌸","💐","💓","🌷"];
+    setInterval(() => {
+        const el = document.createElement("div");
+        el.className = "float";
+        el.style.left = Math.random() * 100 + "vw";
+        el.style.fontSize = Math.random() * 20 + 20 + "px";
+        el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 8000);
+    }, 600);
+</script>
+
+<!-- Envelope Screen -->
+<div id="envelope-screen">
+    <div class="envelope" onclick="openLetter()">
+        <div class="envelope-top"></div>
+    </div>
+    <div class="label-text">for my flutty di, my love</div>
+</div>
+
+<!-- Letter Screen -->
+<div id="letter-screen">
+    <div id="letter"></div>
+    <button id="replay-btn" onclick="showLetter()">Replay Message ✨</button>
+</div>
+
+<!-- Audio -->
+<audio id="bg-music" loop>
+    <source src="https://cdn.pixabay.com/audio/2022/10/30/audio_a3e0e9eaff.mp3?filename=calm-meditation-ambient-124008.mp3" type="audio/mpeg" />
+</audio>
+
+<script>
+    const letterText = `🌸 For My Flutty Di 🌸
+
+We started off simple, nothing special, nothing deep,
+Barely a hi, barely a bond, just names we chose to keep
+No moment marked the beginning, no spark, no reason why,
+Yet somehow life stitched our stories, quietly, you and I ✨
+
+I heard about you from Ninja, his UC tales and your grace,
+38 and an amazing mom, that’s all I knew of your face 👩‍👧
+On DC you seemed older, calmer, while I was loud and wild,
+You stood there strong and silent, and I reacted like a child 😅
+
+One day things got messy, and I exploded like I do 💥
+But you stopped them with one sentence, short, simple, firm and true
+I hated that calmness then, I didn’t understand your way,
+But now I see your silence said what anger could never say 🌙
+
+Slowly we started talking, and somehow I found in you,
+A peace I had never tasted, a comfort honest and true 💗
+We ranted, joked, bashed Ninja, okay mostly me and you,
+And every secret you shared felt like déjà vu 🤝
+
+So many shared traumas, so many mirrored scars,
+Like fate made us emotional twins under the same tired stars 🌌
+We’re stupid at saving ourselves, but wise when others call,
+And maybe you’re the smartest, but I learned from you after all 💫
+
+But even twins have clashes, and sometimes we broke apart,
+Sometimes silence grew like winter, and froze a piece of my heart ❄️
+I thought I lost you completely when I returned from Hajj again,
+Thought no one cared I was missing, thought I was easy to replace 💔
+
+I doubted your affection, I doubted what you gave,
+Not knowing my own insecurities were causing this little wave 🌊
+And di, for that, I’m sorry, for every hurtful word I let slip,
+For every dark assumption, every fear I let equip 😔
+
+You deserved a softer friend, one who didn’t make you ache,
+Yet you stayed, you held your patience, you never called me fake 🤍
+Thank you for every whisper that healed a heavy night,
+For every time your silence taught me how not to fight 🌿
+
+Thank you for being my diary, my home in a noisy crowd,
+For hearing my endless rants, the quiet ones and the loud 🌼
+Thank you for trusting your secrets with someone broken like me,
+I swear I’ll guard them always, as safely as can be 🔐
+
+I’m sorry for the moments when I made our bond feel small,
+Sorry for the times you stayed calm while I created the fall 😣
+But di, through all my chaos, one thing remains true,
+My heart grew softer, lighter, kinder, all because of you 💞
+
+If time or distance separate us, if DC ever fades away,
+I’ll still remember you dii, in every tomorrow, every day 🌙✨
+My comfort, my solace, my jaan, my safe place to cry,
+My sister not by birth, but by destiny’s quiet tie 👭💖
+
+Thank you for everything,
+I’m sorry for everything,
+I love you, my Flutty di 💗`;
+
+    function openLetter() {
+        document.querySelector('.envelope-top').classList.add('open-envelope-top');
+        setTimeout(() => {
+            document.getElementById("envelope-screen").style.opacity = "0";
+            setTimeout(() => {
+                document.getElementById("envelope-screen").style.display = "none";
+                document.getElementById("letter-screen").style.display = "block";
+                showLetter();
+                document.getElementById("bg-music").play();
+            }, 1000);
+        }, 700);
+    }
+
+    function showLetter() {
+        const letterDiv = document.getElementById("letter");
+        letterDiv.innerText = letterText;
+        letterDiv.style.opacity = 0;
+        letterDiv.style.animation = "fadeIn 2s ease forwards";
+        document.getElementById("bg-music").play();
+    }
+</script>
+
+</body>
+</html>
